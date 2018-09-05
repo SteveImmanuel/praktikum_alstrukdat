@@ -4,7 +4,7 @@
 Nama				    : Steve Andreas I
 Tanggal			        : 3 September 2018
 Topik praktikum	        : ADT
-Deskripsi		        : body ADT point*/
+Deskripsi		        : Body ADT point*/
 
 #include "point.h"
 #include <math.h>
@@ -28,8 +28,7 @@ void BacaPOINT(POINT *P)
 /* F.S. P terdefinisi */
 {
 	float x,y;
-	printf("Masukkan Absis : ");scanf("%f",&x);
-	printf("Masukkan Ordinat : ");scanf("%f",&y);
+	printf("Masukkan Absis dan Ordinat : ");scanf("%f %f",&x,&y);
 	*P=MakePOINT(x,y);
 } 
 
@@ -42,7 +41,7 @@ void TulisPOINT(POINT P)
 /* I.S. P terdefinisi */
 /* F.S. P tertulis di layar dengan format "(X,Y)" */  
 {
-	printf("(%f,%f)\n",Absis(P),Ordinat(P));
+	printf("(%.2f,%.2f)\n",Absis(P),Ordinat(P));
 } 
 
 boolean EQ(POINT P1, POINT P2)

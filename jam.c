@@ -4,7 +4,7 @@
 Nama				: Steve Andreas I
 Tanggal				: 3 September 2018
 Topik praktikum		: ADT
-Deskripsi			: body ADT Jam*/
+Deskripsi			: Body ADT Jam*/
 
 #include <stdio.h>
 #include "jam.h"
@@ -59,7 +59,7 @@ void TulisJAM (JAM J)
 /* Proses : menulis nilai setiap komponen J ke layar dalam format HH:MM:SS
    tanpa karakter apa pun di depan atau belakangnya, termasuk spasi, enter, dll.*/ 
 {
-	printf("%02d:%02d:%02d",Hour(J),Minute(J),Second(J));
+	printf("%02d:%02d:%02d\n",Hour(J),Minute(J),Second(J));
 }
 
 /* ***************************************************************** */
@@ -93,7 +93,7 @@ JAM DetikToJAM (long N)
 boolean JEQ (JAM J1, JAM J2)
 /* Mengirimkan true jika J1=J2, false jika tidak */
 {
-	return ((Hour(J1)==Hour(J2))&&(Minute(J1)==Minute(J2))&&(Second(J1)==Second(J2)));
+	return (JAMToDetik(J1)==JAMToDetik(J2));
 }
 boolean JNEQ (JAM J1, JAM J2)
 /* Mengirimkan true jika J1 tidak sama dengan J2 */
@@ -128,7 +128,7 @@ JAM NextNDetik (JAM J, int N)
 	int i;
 	JAM temp=J;
 	for(i=1;i<=N;i++){
-		temp=NextDetik(J);
+		temp=NextDetik(temp);
 	}
 	return temp;
 }
@@ -151,7 +151,7 @@ JAM PrevNDetik (JAM J, int N)
 	int i;
 	JAM temp=J;
 	for(i=1;i<=N;i++){
-		temp=PrevDetik(J);
+		temp=PrevDetik(temp);
 	}
 	return temp;
 }

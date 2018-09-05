@@ -4,7 +4,7 @@
 Nama				    : Steve Andreas I
 Tanggal			    : 3 September 2018
 Topik praktikum	 : ADT
-Deskripsi			 : header ADT Jam*/
+Deskripsi			 : Header ADT Jam*/
 
 #ifndef JAM_H
 #define JAM_H

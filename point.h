@@ -4,7 +4,7 @@
 Nama				    : Steve Andreas I
 Tanggal			        : 3 September 2018
 Topik praktikum	        : ADT
-Deskripsi		        : header ADT point*/
+Deskripsi		        : Header ADT point*/
 
 #ifndef POINT_H
 #define POINT_H
