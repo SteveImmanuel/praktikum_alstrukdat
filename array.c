@@ -500,24 +500,70 @@ boolean IsSimetris (TabInt T)
 }
 
 /* ********** SORTING ********** */
-void MaxSortDesc (TabInt * T);
+void MaxSortDesc (TabInt * T)
 /* I.S. T boleh kosong */
 /* F.S. T elemennya terurut menurun dengan Maximum Sort */
 /* Proses : mengurutkan T sehingga elemennya menurun/mengecil */
 /*          tanpa menggunakan tabel kerja */
-void InsSortAsc (TabInt * T);
+{
+  IdxType i,pass,imax;
+  ElType temp;
+  if(Neff(*T)>1){
+    for(pass=GetFirstIdx(*T);pass<GetLastIdx(*T);pass++){
+      imax=pass;
+      for(i=pass+1;i<=GetLastIdx(*T);i++){
+        if (Elmt(*T,imax)<Elmt(*T,i)){
+          imax=i;
+        }
+      }
+      temp=Emlt(*T,imax);
+      Elmt(*T,imax)=Elmt(*T,pass);
+      Elmt(*T,pass)=temp;
+    }
+  }
+}
+void InsSortAsc (TabInt * T)
 /* I.S. T boleh kosong */
 /* F.S. T elemennya terurut menaik dengan Insertion Sort */
 /* Proses : mengurutkan T sehingga elemennya menaik/membesar */
 /*          tanpa menggunakan tabel kerja */
+{
+  IdxType i,pass;
+  ElType temp;
+  if(Neff(*T)>1){
+    for(pass=GetFirstIdx(*T)+1;pass<=GetLastIdx(*T);pass++){
+      temp=Elmt(*T,pass);
+      i=pass-1;
+      while((Elmt(*T,i)>temp)&&(i>GetFirstIdx(*T))){
+        Elmt(*T,i+1)=Elmt(*T,i);
+        i--;
+      }
+      if(temp>=Elmt(*T,i)){
+        Elmt(*T,i+1)=temp;
+      }else{
+        Elmt(*T,i+1)=Elmt(*T,i);
+        Elmt(*T,i)=temp;
+      }
+    }
+  }
+}
 
 /* ********** MENAMBAH ELEMEN ********** */
 /* *** Menambahkan elemen terakhir *** */
-void AddAsLastEl (TabInt * T, ElType X);
+void AddAsLastEl (TabInt * T, ElType X)
 /* Proses: Menambahkan X sebagai elemen terakhir tabel */
 /* I.S. Tabel T boleh kosong, tetapi tidak penuh */
 /* F.S. X adalah elemen terakhir T yang baru */
-void AddEli (TabInt * T, ElType X, IdxType i);
+{
+  if(IsEmpty(*T)){
+    Neff(*T)++;
+    Elmt(*T,IdxMin)=X;
+  }else if(!IsFull(*T)){
+    Neff(*T)++;
+    Elmt(*T,GetLastIdx(*T))=X;
+  }
+}
+void AddEli (TabInt * T, ElType X, IdxType i)
 /* Menambahkan X sebagai elemen ke-i tabel tanpa mengganggu kontiguitas 
    terhadap elemen yang sudah ada */
 /* I.S. Tabel tidak kosong dan tidak penuh */
@@ -525,6 +571,17 @@ void AddEli (TabInt * T, ElType X, IdxType i);
 /* F.S. X adalah elemen ke-i T yang baru */
 /* Proses : Geser elemen ke-i+1 s.d. terakhir */
 /*          Isi elemen ke-i dengan X */
+{
+  IdxType j=GetLastIdx(*T);
+  if(!IsEmpty(*T))&&(!IsFull(*T))&&(IsIdxValid(i))){
+    while(j>=i){
+      Elmt(*T,j+1)=Elmt(*T,j);
+      j--;
+    }
+    Elmt(*T,i)=X;
+    Neff(*T)++;
+  }
+}
 
 /* ********** MENGHAPUS ELEMEN ********** */
 void DelLastEl (TabInt * T, ElType * X);
@@ -533,6 +590,13 @@ void DelLastEl (TabInt * T, ElType * X);
 /* F.S. X adalah nilai elemen terakhir T sebelum penghapusan, */
 /*      Banyaknya elemen tabel berkurang satu */
 /*      Tabel T mungkin menjadi kosong */
+{
+  if(!IsEmpty(*T)){
+    *X=Elmt(*T,GetLastIdx(*T));
+    Elmt(*T,GetLastIdx(*T))="";
+    Neff(*T)--;
+  }
+}
 void DelEli (TabInt * T, IdxType i, ElType * X);
 /* Menghapus elemen ke-i tabel tanpa mengganggu kontiguitas */
 /* I.S. Tabel tidak kosong, i adalah indeks efektif yang valid */
@@ -541,6 +605,15 @@ void DelEli (TabInt * T, IdxType i, ElType * X);
 /*      Tabel T mungkin menjadi kosong */
 /* Proses : Geser elemen ke-i+1 s.d. elemen terakhir */
 /*          Kurangi elemen efektif tabel */
+{
+  if(!IsEmpty(*T))&&IsIdxEff(i)){
+    *X=Elmt(*T,i);
+    for(;i<GetLastIdx(*T);i++){
+      Elmt(*T,i)=Elmt(*T,i+1);
+    }
+    Neff(*T)--;
+  }
+}
 
 /* ********** TABEL DGN ELEMEN UNIK (SETIAP ELEMEN HANYA MUNCUL 1 KALI) ********** */
 void AddElUnik (TabInt * T, ElType X);
@@ -553,6 +626,21 @@ void AddElUnik (TabInt * T, ElType X);
     dan dituliskan pesan "nilai sudah ada" */
 /* Proses : Cek keunikan dengan sequential search dengan sentinel */
 /*          Kemudian tambahkan elemen jika belum ada */
+{
+  if(!IsFull(*T)){
+    if(IsEmpty(*T)){
+      Neff(*T)++;
+      Elmt(*T,IdxMin)=X;
+    }else{
+      if(!SearchSentinel(*T,X)){
+        Neff(*T)++;
+        Elmt(*T,GetLastIdx(*T))=X;
+      }else{
+        printf("nilai sudah ada");
+      }
+    }
+  }
+}
 
 /* ********** TABEL DGN ELEMEN TERURUT MEMBESAR ********** */
 IdxType SearchUrut (TabInt T, ElType X)
@@ -575,7 +663,7 @@ ElType MinUrut (TabInt T)
 {
   return Elmt(T,GetFirstIdx(T));
 }
-void MaxMinUrut (TabInt T, ElType * Max, ElType * Min);
+void MaxMinUrut (TabInt T, ElType * Max, ElType * Min)
 /* I.S. Tabel T tidak kosong, elemen terurut membesar */
 /* F.S. Max berisi nilai maksimum T;
         Min berisi nilai minimum T */
@@ -593,16 +681,30 @@ void Add1Urut (TabInt * T, ElType X)
 /* Proses : Search tempat yang tepat sambil geser */
 /*          Insert X pada tempat yang tepat tersebut tanpa mengganggu keterurutan */
 {
-  IdxType i=GetLastIdx(*T);
   ElType temp;
-  Elmt(*T,GetLastIdx(*T)+1)=X;
-  while((Elmt(*T,i)>X)&&i>GetFirstIdx(*T)){
-    Elmt(*T,i+1)=Elmt(*T,i);
-    i--;
+  IdxType i;
+  if(IsEmpty(*T)){
+    Neff(*T)++;
+    AddEli(T,X,IdxMin);
+  }else if(!IsFull(*T)){
+    i=GetLastIdx(*T);
+    Elmt(*T,GetLastIdx(*T)+1)=X;
+    while((Elmt(*T,i)>X)&&i>GetFirstIdx(*T)){
+      Elmt(*T,i+1)=Elmt(*T,i);
+      i--;
+    }
+    i++;
+    Elmt(*T,i)=X;
+    Neff(*T)++;
   }
-  i++;
-  Elmt(*T,i)=X;
-  Neff(*T)++;
+  
+  /*IdxType i=GetFirstIdx(*T);
+  if(IsEmpty(*T)){
+    Neff(*T)++;
+    AddEli(T,X,IdxMin);
+  }else if(!IsFull(*T)){
+    while(i<)
+  }*/
 }
 void Del1Urut (TabInt * T, ElType X);
 /* Menghapus X yang pertama kali (pada indeks terkecil) yang ditemukan */
@@ -613,4 +715,11 @@ void Del1Urut (TabInt * T, ElType X);
 /*      Setelah penghapusan, elemen tabel tetap kontigu! */
 /* Proses : Search indeks ke-i dengan elemen ke-i = X. */
 /*          Delete jika ada. */
+{
+  IdxType i=Search2(*T,X);
+  ElType temp;
+  if(!IsEmpty(*T)){
+    DelEli(T,i,temp);
+  }
+}
 
