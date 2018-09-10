@@ -13,39 +13,7 @@ Deskripsi        : Body ADT array*/
    memori tabel statik */
 
 #include <stdio.h>
-#include <array.h>
-
-/*  Kamus Umum */
-#define IdxMax 100
-/* Indeks maksimum array, sekaligus ukuran maksimum array dalam C */
-#define IdxMin 1
-/* Indeks minimum array */
-#define IdxUndef -999 
-/* Indeks tak terdefinisi*/
-
-/* Definisi elemen dan koleksi objek */
-typedef int IdxType;  /* type indeks */
-typedef int ElType;   /* type elemen tabel */
-typedef struct { 
-  ElType TI[IdxMax+1]; /* memori tempat penyimpan elemen (container) */
-  int Neff; /* >=0, banyaknya elemen efektif */
-} TabInt;
-/* Indeks yang digunakan [IdxMin..IdxMax] */
-/* Jika T adalah TabInt, cara deklarasi dan akses: */
-/* Deklarasi : T : TabInt */
-/* Maka cara akses: 
-   T.Neff  untuk mengetahui banyaknya elemen 
-   T.TI    untuk mengakses seluruh nilai elemen tabel 
-   T.TI[i] untuk mengakses elemen ke-i */
-/* Definisi : 
-  Tabel kosong: T.Neff = 0
-  Definisi elemen pertama : T.TI[i] dengan i=1 
-  Definisi elemen terakhir yang terdefinisi: T.TI[i] dengan i=T.Neff */
-  
-/* ********** SELEKTOR ********** */
-#define Neff(T)   (T).Neff
-#define TI(T)     (T).TI
-#define Elmt(T,i) (T).TI[(i)]
+#include "array.h"
 
 /* ********** KONSTRUKTOR ********** */
 /* Konstruktor : create tabel kosong  */
@@ -137,7 +105,7 @@ void BacaIsi (TabInt * T)
   IdxType i;
   do{
     scanf("%d",&Neff(*T));
-  }while(!((N>=0)&&(N<=MaxNbEl(*T))));
+  }while(!((Neff(*T)>=0)&&(Neff(*T)<=MaxNbEl(*T))));
   if (Neff(*T)>0){
     for (i=IdxMin;i<=Neff(*T);i++){
       scanf("%d",&Elmt(*T,i));
@@ -216,7 +184,7 @@ TabInt PlusTab (TabInt T1, TabInt T2)
   IdxType i;
   TabInt temp;
   MakeEmpty(&temp);
-  for(i=GetFirstIdx(T);i<=GetLastIdx(T);i++){
+  for(i=GetFirstIdx(T1);i<=GetLastIdx(T1);i++){
     Elmt(temp,i)=Elmt(T1,i)+Elmt(T2,i);
     Neff(temp)++;
   }
@@ -229,7 +197,7 @@ TabInt MinusTab (TabInt T1, TabInt T2)
   IdxType i;
   TabInt temp;
   MakeEmpty(&temp);
-  for(i=GetFirstIdx(T);i<=GetLastIdx(T);i++){
+  for(i=GetFirstIdx(T1);i<=GetLastIdx(T1);i++){
     Elmt(temp,i)=Elmt(T1,i)-Elmt(T2,i);
     Neff(temp)++;
   }
@@ -242,7 +210,7 @@ TabInt KaliTab (TabInt T1, TabInt T2)
   IdxType i;
   TabInt temp;
   MakeEmpty(&temp);
-  for(i=GetFirstIdx(T);i<=GetLastIdx(T);i++){
+  for(i=GetFirstIdx(T1);i<=GetLastIdx(T1);i++){
     Elmt(temp,i)=Elmt(T1,i)*Elmt(T2,i);
     Neff(temp)++;
   }
@@ -300,7 +268,7 @@ boolean IsLess (TabInt T1, TabInt T2)
       less=false;
     }else{
       i=GetFirstIdx(T1);
-      while((i<=GetLastIdx(T1)&&(less)){
+      while(i<=GetLastIdx(T1)&&(less)){
         if(Elmt(T1,i)>=Elmt(T2,i)){
           less=false;
         }else{
@@ -346,7 +314,7 @@ IdxType Search2 (TabInt T, ElType X)
   if (IsEmpty(T)){
     return IdxUndef;
   }else{
-    while(i<=GetLastIdx(T))&&(!found){
+    while((i<=GetLastIdx(T))&&(!found)){
       if(Elmt(T,i)==X){
         found=true;
       }else{
@@ -370,7 +338,7 @@ boolean SearchB (TabInt T, ElType X)
   if (IsEmpty(T)){
     return false;
   }else{
-    while(i<=GetLastIdx(T))&&(!found){
+    while((i<=GetLastIdx(T))&&(!found)){
       if(Elmt(T,i)==X){
         found=true;
       }else{
@@ -409,9 +377,9 @@ ElType ValMax (TabInt T)
 /* Mengirimkan nilai maksimum tabel */
 {
   IdxType i;
-  Eltype x;
+  ElType x;
   x=Elmt(T,GetFirstIdx(T));
-  for (i=GetFirstIdx(T)+1;i<=GetLastIdx(i);i++){
+  for (i=GetFirstIdx(T)+1;i<=GetLastIdx(T);i++){
     if (Elmt(T,i)>x){
       x=Elmt(T,i);
     }
@@ -424,9 +392,9 @@ ElType ValMin (TabInt T)
 /* *** Mengirimkan indeks elemen bernilai ekstrem *** */
 {
   IdxType i;
-  Eltype x;
+  ElType x;
   x=Elmt(T,GetFirstIdx(T));
-  for (i=GetFirstIdx(T)+1;i<=GetLastIdx(i);i++){
+  for (i=GetFirstIdx(T)+1;i<=GetLastIdx(T);i++){
     if (Elmt(T,i)<x){
       x=Elmt(T,i);
     }
@@ -438,8 +406,8 @@ IdxType IdxMaxTab (TabInt T)
 /* Mengirimkan indeks i terkecil dengan nilai elemen merupakan nilai maksimum pada tabel */
 {
   IdxType i,idxex=GetFirstIdx(T);
-  for (i=GetFirstIdx(T)+1;i<=GetLastIdx(i);i++){
-    if (Elmt(T,i)>Emlt(T,idxex)){
+  for (i=GetFirstIdx(T)+1;i<=GetLastIdx(T);i++){
+    if (Elmt(T,i)>Elmt(T,idxex)){
       idxex=i;
     }
   }
@@ -450,7 +418,7 @@ IdxType IdxMinTab (TabInt T)
 /* Mengirimkan indeks i terkecil dengan nilai elemen merupakan nilai minimum pada tabel */
 {
   IdxType i,idxex=GetFirstIdx(T);
-  for (i=GetFirstIdx(T)+1;i<=GetLastIdx(i);i++){
+  for (i=GetFirstIdx(T)+1;i<=GetLastIdx(T);i++){
     if (Elmt(T,i)<Elmt(T,idxex)){
       idxex=i;
     }
@@ -468,7 +436,7 @@ void CopyTab (TabInt Tin, TabInt * Tout)
   if (!IsEmpty(Tin)){
     for(i=GetFirstIdx(Tin);i<=GetLastIdx(Tin);i++){
       Elmt(*Tout,i)=Elmt(Tin,i);
-      Neff(Tout)++;
+      Neff(*Tout)++;
     }
   }
 }
@@ -480,7 +448,7 @@ TabInt InverseTab (TabInt T)
 {
   IdxType i;
   TabInt temp;
-  MakeEmpty(temp);
+  MakeEmpty(&temp);
   if (!IsEmpty(T)){
     for(i=GetFirstIdx(T);i<=GetLastIdx(T);i++){
       Elmt(temp,i)=Elmt(T,GetLastIdx(T)-i+1);
@@ -516,7 +484,7 @@ void MaxSortDesc (TabInt * T)
           imax=i;
         }
       }
-      temp=Emlt(*T,imax);
+      temp=Elmt(*T,imax);
       Elmt(*T,imax)=Elmt(*T,pass);
       Elmt(*T,pass)=temp;
     }
@@ -573,7 +541,7 @@ void AddEli (TabInt * T, ElType X, IdxType i)
 /*          Isi elemen ke-i dengan X */
 {
   IdxType j=GetLastIdx(*T);
-  if(!IsEmpty(*T))&&(!IsFull(*T))&&(IsIdxValid(i))){
+  if((!IsEmpty(*T))&&(!IsFull(*T))&&(IsIdxValid(*T,i))){
     while(j>=i){
       Elmt(*T,j+1)=Elmt(*T,j);
       j--;
@@ -584,7 +552,7 @@ void AddEli (TabInt * T, ElType X, IdxType i)
 }
 
 /* ********** MENGHAPUS ELEMEN ********** */
-void DelLastEl (TabInt * T, ElType * X);
+void DelLastEl (TabInt * T, ElType * X)
 /* Proses : Menghapus elemen terakhir tabel */
 /* I.S. Tabel tidak kosong */
 /* F.S. X adalah nilai elemen terakhir T sebelum penghapusan, */
@@ -597,7 +565,7 @@ void DelLastEl (TabInt * T, ElType * X);
     Neff(*T)--;
   }
 }
-void DelEli (TabInt * T, IdxType i, ElType * X);
+void DelEli (TabInt * T, IdxType i, ElType * X)
 /* Menghapus elemen ke-i tabel tanpa mengganggu kontiguitas */
 /* I.S. Tabel tidak kosong, i adalah indeks efektif yang valid */
 /* F.S. X adalah nilai elemen ke-i T sebelum penghapusan */
@@ -606,7 +574,7 @@ void DelEli (TabInt * T, IdxType i, ElType * X);
 /* Proses : Geser elemen ke-i+1 s.d. elemen terakhir */
 /*          Kurangi elemen efektif tabel */
 {
-  if(!IsEmpty(*T))&&IsIdxEff(i)){
+  if((!IsEmpty(*T))&&(IsIdxEff(*T,i))){
     *X=Elmt(*T,i);
     for(;i<GetLastIdx(*T);i++){
       Elmt(*T,i)=Elmt(*T,i+1);
@@ -616,7 +584,7 @@ void DelEli (TabInt * T, IdxType i, ElType * X);
 }
 
 /* ********** TABEL DGN ELEMEN UNIK (SETIAP ELEMEN HANYA MUNCUL 1 KALI) ********** */
-void AddElUnik (TabInt * T, ElType X);
+void AddElUnik (TabInt * T, ElType X)
 /* Menambahkan X sebagai elemen terakhir tabel, pada tabel dengan elemen unik */
 /* I.S. Tabel T boleh kosong, tetapi tidak penuh */
 /*      dan semua elemennya bernilai unik, tidak terurut */
@@ -706,7 +674,7 @@ void Add1Urut (TabInt * T, ElType X)
     while(i<)
   }*/
 }
-void Del1Urut (TabInt * T, ElType X);
+void Del1Urut (TabInt * T, ElType X)
 /* Menghapus X yang pertama kali (pada indeks terkecil) yang ditemukan */
 /* I.S. Tabel tidak kosong */
 /* F.S. Jika ada elemen tabel bernilai X , */
@@ -719,7 +687,9 @@ void Del1Urut (TabInt * T, ElType X);
   IdxType i=Search2(*T,X);
   ElType temp;
   if(!IsEmpty(*T)){
-    DelEli(T,i,temp);
+    if(i!=IdxUndef){
+    	DelEli(T,i,&temp);
+    }
   }
 }
 
