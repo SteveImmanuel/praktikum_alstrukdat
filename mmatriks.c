@@ -14,7 +14,9 @@ int main(){
 	//TulisMATRIKS(M2);
 	//PKaliKons(&M1,6);
 	//Transpose(&M1);
-	//TulisMATRIKS(M1);
-	printf("%f",Determinan(M1));
+	//Transpose(&M1);
+	//TulisMATRIKS(M1);printf("\n");
+	printf("%d\n",IsSimetri(M1));
+	//printf("%d\n",EQ(M1,M2));
 	return 0;
 }
