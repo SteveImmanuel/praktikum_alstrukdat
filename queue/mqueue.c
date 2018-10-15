@@ -25,7 +25,9 @@ int main() {
       printf("\nDel: %d\n",x);
       tulisQ(q);
     }
-    printf("Q full\n");
+    if(IsFull(q)){
+    	printf("Q full\n");
+ 	}
   }
   return 0;
 }
