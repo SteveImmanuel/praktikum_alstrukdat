@@ -174,9 +174,15 @@ void Putar (POINT *P, float Sudut)
 /* I.S. P terdefinisi */
 /* F.S. P digeser sebesar Sudut derajat dengan sumbu titik (0,0) */
 {
-	Sudut=-1*(Sudut/180*M_PI);
+	/*Sudut=-1*((float)(Sudut/180.0)*3.14159265358979323846);
 	int x=Absis(*P),y=Ordinat(*P);
 	Absis(*P)=x*cos(Sudut)-y*sin(Sudut);
-	Ordinat(*P)=x*sin(Sudut)+y*cos(Sudut);
+	Ordinat(*P)=x*sin(Sudut)+y*cos(Sudut);*/
+	float x = Absis(*P) * cos(Sudut) - Ordinat(*P) * sin(Sudut);
+	float y = Absis(*P) * sin(Sudut) + Ordinat(*P) * cos(Sudut);
+
+	Absis(*P) = x;
+	Ordinat(*P) = y;
+
 }
 

@@ -20,8 +20,10 @@ void MakeGARIS(POINT P1, POINT P2, GARIS *L)
 /* F.S. L terdefinisi dengan L.PAw = P1 dan L.PAkh = P2 */
 /* Membentuk sebuah L dari komponen-komponennya */
 {
-	PAwal(*L)=P1;
-	PAkhir(*L)=P2;
+	Absis(PAwal(*L))=Absis(P1);
+	Ordinat(PAwal(*L))=Ordinat(P1);
+	Absis(PAkhir(*L))=Absis(P2);
+	Ordinat(PAkhir(*L))=Ordinat(P2);	
 }
 
 /* ***************************************************************** */
@@ -58,17 +60,14 @@ void TulisGARIS(GARIS L)
    tanpa tambahan karakter apa pun di depan, di tengah, atau di belakang,
    termasuk spasi dan enter */
 {
-	printf("((%.2f,%.2f),(%.2f,%.2f))\n",PAwal(L).X,PAwal(L).Y,PAkhir(L).X,PAkhir(L).Y);
+	printf("((%.2f,%.2f),(%.2f,%.2f))",PAwal(L).X,PAwal(L).Y,PAkhir(L).X,PAkhir(L).Y);
 }
 
 /* *** Kelompok operasi garis *** */
 float PanjangGARIS(GARIS L)
 /* Menghitung panjang garis L : (((y2-y1) ^ 2) + ((x2-x1) ^ 2)) ^ 0.5 */
 {
-	float x1,x2,y1,y2;
-	x1=PAwal(L).X;y1=PAwal(L).Y;
-	x2=PAkhir(L).X;y2=PAkhir(L).Y;
-	return sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+	return Panjang(PAwal(L),PAkhir(L));
 }
 float Gradien(GARIS L)
 /* Mengembalikan Gradien (m) dari L */
@@ -85,11 +84,8 @@ void GeserGARIS(GARIS *L, float deltaX, float deltaY)
 /* F.S. L digeser sebesar deltaX ke arah sumbu X dan sebesar deltaY ke arah sumbu Y */
 /* Proses : PAw dan PAkh digeser. */
 {
-	POINT paw,pakh;
-	paw=PAwal(*L);pakh=PAkhir(*L);
-	paw=PlusDelta(paw, deltaX, deltaY);
-	pakh=PlusDelta(pakh, deltaX, deltaY);
-	MakeGARIS(paw,pakh,L);
+	PAwal(*L)=PlusDelta(PAwal(*L), deltaX, deltaY);
+	PAkhir(*L)=PlusDelta(PAkhir(*L), deltaX, deltaY);
 }
 /* *** Kelompok predikat *** */
 boolean IsTegakLurus(GARIS L1, GARIS L2)
